@@ -1,9 +1,9 @@
 # PetStore Testing
 
 * [Quick start](#quick-start)
-* [Run tests and get an HTML report](#run-tests-and-get-an-html-report)
-* [Run tests in GitLab CI/CD](#run-tests-in-gitlab-cicd)
-* [Run tests in a Docker container](#run-tests-in-a-docker-container)
+* [Run the tests and get an HTML report](#run-the-tests-and-get-an-html-report)
+* [Run the tests in GitLab CI/CD](#run-the-tests-in-gitlab-cicd)
+* [Run the tests in a Docker container](#run-the-tests-in-a-docker-container)
 
 ## Quick start
 _Note: You must have Python 3.6+ installed and operational on your machine._
