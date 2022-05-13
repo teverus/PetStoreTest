@@ -1,0 +1,13 @@
+auto_tests:
+  image: python:latest
+  artifacts:
+    name: $CI_JOB_STARTED_AT
+    paths:
+      - report.html
+    expire_in: 1 week
+    when: always
+  script:
+    - pip install -q -r requirements.txt
+    - pytest
+  only:
+    - main
