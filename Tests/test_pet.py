@@ -1,17 +1,18 @@
 from http import HTTPStatus
+from random import randrange
 
 import pytest
 
-from Code.helpers import get_random_int, get_random_string, get_random_pet_status
+from Code.helpers import get_random_string, get_random_pet_status
 from Code.pet_object import Pet
 
 
 @pytest.fixture(scope="module")
 def pet(api):
     """A fixture that creates a pet for tests and deletes it afterwards"""
-    random_id = get_random_int(5)
+    random_id = randrange(5)
     random_name = get_random_string()
-    random_category_id = get_random_int(5)
+    random_category_id = randrange(5)
     random_category = get_random_string()
     random_status = get_random_pet_status()
 

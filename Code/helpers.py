@@ -28,11 +28,6 @@ def get_pet_json(data: dict) -> dict:
     return json
 
 
-def get_random_int(start: int = 0, end: int = 100) -> int:
-    """A helper method to get a random positive number"""
-    return random.randint(start, end)
-
-
 def get_random_string(
     length: int = 10, lower: bool = True, upper: bool = False, digits: bool = False
 ) -> str:
