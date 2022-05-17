@@ -27,3 +27,14 @@ class NotFoundError(BaseModel):
     code: int = 404
     type: str = "unknown"
     message: str = 'java.lang.NumberFormatException: For input string: "%s"'
+
+
+class DeleteSuccess(BaseModel):
+    code: int = 200
+    type: str = "unknown"
+    message: str = "%s"
+
+
+class InvalidPet:
+    def __init__(self, id):
+        self.id = id

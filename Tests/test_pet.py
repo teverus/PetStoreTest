@@ -4,6 +4,7 @@ from random import randrange, choice
 import pytest
 from faker.providers.person.en import Provider as Fake
 
+from Code.constants import InvalidPet
 from Code.pet_object import Pet, Category, PetStatus
 
 
@@ -20,7 +21,7 @@ def pet(api):
 
     yield new_pet
 
-    api.pet_id.delete(new_pet.id)
+    api.pet_id.delete(new_pet)
 
 
 def test_post_pet(api, pet):
@@ -42,4 +43,4 @@ def test_get_pet_petId(api, pet):
     ],
 )
 def test_delete_pet_petID_negative(api, invalid_id, status_code):
-    api.pet_id.delete(invalid_id, code=status_code)
+    api.pet_id.delete(InvalidPet(invalid_id), code=status_code)
