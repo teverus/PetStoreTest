@@ -1,17 +1,24 @@
-from dataclasses import dataclass
+from enum import Enum
 from typing import List
 
-from Code.constants import PetStatus
+from pydantic import BaseModel
 
 
-@dataclass
-class Pet:
-    """Dataclass for a pet"""
+class Category(BaseModel):
+    id: int = None
+    name: str = None
 
-    pet_name: str
-    photo_urls: List = None
-    pet_id: int = None
-    category_id: int = None
-    category_name: str = None
-    tags: List = None
+
+class PetStatus(str, Enum):
+    available = "available"
+    pending = "pending"
+    sold = "sold"
+
+
+class Pet(BaseModel):
+    id: int = None
+    category: Category = None
+    name: str
+    photoUrls: List[str] = None
+    tags: List[str] = None
     status: PetStatus = None

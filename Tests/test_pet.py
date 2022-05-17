@@ -1,32 +1,26 @@
 from http import HTTPStatus
-from random import randrange
+from random import randrange, choice
 
 import pytest
+from faker.providers.person.en import Provider as Fake
 
-from Code.helpers import get_random_string, get_random_pet_status
-from Code.pet_object import Pet
+from Code.pet_object import Pet, Category, PetStatus
 
 
 @pytest.fixture(scope="module")
 def pet(api):
     """A fixture that creates a pet for tests and deletes it afterwards"""
-    random_id = randrange(5)
-    random_name = get_random_string()
-    random_category_id = randrange(5)
-    random_category = get_random_string()
-    random_status = get_random_pet_status()
 
     new_pet = Pet(
-        pet_id=random_id,
-        pet_name=random_name,
-        category_id=random_category_id,
-        category_name=random_category,
-        status=random_status,
+        name=choice(Fake.first_names),
+        id=randrange(100),
+        category=Category(id=randrange(100), name=choice(Fake.last_names)),
+        status=choice(list(PetStatus)),
     )
 
     yield new_pet
 
-    api.pet_id.delete(new_pet.pet_id)
+    api.pet_id.delete(new_pet.id)
 
 
 def test_post_pet(api, pet):
@@ -35,7 +29,7 @@ def test_post_pet(api, pet):
 
 def test_get_pet_petId(api, pet):
     api.pet.post(pet)
-    api.pet_id.get(pet.pet_id)
+    api.pet_id.get(pet)
 
 
 @pytest.mark.parametrize(
