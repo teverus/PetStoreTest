@@ -32,9 +32,9 @@ class PetFindByTags(BaseEndpoint):
         super(PetFindByTags, self).__init__(path)
 
 
-class PetId(BaseEndpoint):
+class PetPetId(BaseEndpoint):
     def __init__(self, path):
-        super(PetId, self).__init__(path)
+        super(PetPetId, self).__init__(path)
 
     def get(self, pet_id: int, code: HTTPStatus = HTTPStatus.OK):
         response = BaseRequest().get(f"{self.path}/{pet_id}", code=code)
