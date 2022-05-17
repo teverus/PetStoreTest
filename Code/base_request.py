@@ -19,6 +19,7 @@ class BaseRequest:
         path: str,
         json: dict = None,
         params: dict = None,
+        files: dict = None,
         code: HTTPStatus = HTTPStatus.OK,
     ) -> Response:
         """A base method for requests"""
@@ -32,7 +33,7 @@ class BaseRequest:
             RequestType.PATCH: requests.patch,
         }
 
-        response = a_request[request_type](path, json=json, params=params)
+        response = a_request[request_type](path, json=json, params=params, files=files)
         assert_that(response.status_code, equal_to(code))
 
         return response
@@ -44,8 +45,16 @@ class BaseRequest:
 
         return response
 
-    def post(self, path: str, json: dict, code: HTTPStatus = HTTPStatus.OK) -> Response:
-        response = self.base_request(RequestType.POST, path, json, code=code)
+    def post(
+        self,
+        path: str,
+        json: dict,
+        files: dict = None,
+        code: HTTPStatus = HTTPStatus.OK,
+    ) -> Response:
+        response = self.base_request(
+            RequestType.POST, path, json, files=files, code=code
+        )
 
         return response
 

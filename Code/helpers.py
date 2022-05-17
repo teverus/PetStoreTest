@@ -2,9 +2,10 @@ import random
 import string
 
 from Code.constants import PetStatus
+from Code.pet_object import Pet
 
 
-def get_pet_json(data: dict) -> dict:
+def get_pet_json(data: Pet) -> dict:
     """A helper method to turn a Pet object into a JSON"""
     json = {
         "name": data.pet_name,
