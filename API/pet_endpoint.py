@@ -8,9 +8,9 @@ from Code.base_request import BaseRequest
 from Code.helpers import get_pet_json
 
 
-class PetEndpoint(BaseEndpoint):
+class PetEndpoint:
     def __init__(self, path):
-        super(PetEndpoint, self).__init__(path)
+        self.path = path
 
     def post(self, data: dict):
         json_data = get_pet_json(data)
@@ -22,19 +22,19 @@ class PetEndpoint(BaseEndpoint):
             assert_that(response_json[key], equal_to(value))
 
 
-class PetFindByStatus(BaseEndpoint):
+class PetFindByStatus:
     def __init__(self, path):
-        super(PetFindByStatus, self).__init__(path)
+        self.path = path
 
 
-class PetFindByTags(BaseEndpoint):
+class PetFindByTags:
     def __init__(self, path):
-        super(PetFindByTags, self).__init__(path)
+        self.path = path
 
 
-class PetId(BaseEndpoint):
+class PetPetId:
     def __init__(self, path):
-        super(PetId, self).__init__(path)
+        self.path = path
 
     def get(self, pet_id: int, code: HTTPStatus = HTTPStatus.OK):
         response = BaseRequest().get(f"{self.path}/{pet_id}", code=code)
@@ -48,6 +48,6 @@ class PetId(BaseEndpoint):
             assert_that(f'"message":"{pet_id}"', is_in(response.text))
 
 
-class PetIdUploadImage(BaseEndpoint):
+class PetIdUploadImage:
     def __init__(self, path):
-        super(PetIdUploadImage, self).__init__(path)
+        self.path = path
