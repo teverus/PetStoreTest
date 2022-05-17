@@ -18,6 +18,7 @@ class BaseRequest:
         request_type: RequestType,
         path: str,
         json: dict = None,
+        params: dict = None,
         code: HTTPStatus = HTTPStatus.OK,
     ) -> Response:
         """A base method for requests"""
@@ -28,13 +29,15 @@ class BaseRequest:
             RequestType.DELETE: requests.delete,
         }
 
-        response = a_request[request_type](path, json=json)
+        response = a_request[request_type](path, json=json, params=params)
         assert_that(response.status_code, equal_to(code))
 
         return response
 
-    def get(self, path: str, code: HTTPStatus = HTTPStatus.OK) -> Response:
-        response = self.base_request(RequestType.GET, path, code=code)
+    def get(
+        self, path: str, params: dict = None, code: HTTPStatus = HTTPStatus.OK
+    ) -> Response:
+        response = self.base_request(RequestType.GET, path, code=code, params=params)
 
         return response
 
