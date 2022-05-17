@@ -27,6 +27,9 @@ class BaseRequest:
             RequestType.POST: requests.post,
             RequestType.PUT: requests.put,
             RequestType.DELETE: requests.delete,
+            RequestType.OPTIONS: requests.options,
+            RequestType.HEAD: requests.head,
+            RequestType.PATCH: requests.patch,
         }
 
         response = a_request[request_type](path, json=json, params=params)

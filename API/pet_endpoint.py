@@ -36,8 +36,8 @@ class PetPetId:
     def __init__(self, path):
         self.path = path
 
-    def get(self, pet_id: int, code: HTTPStatus = HTTPStatus.OK):
-        response = BaseRequest().get(f"{self.path}/{pet_id}", code=code)
+    def get(self, pet_id: int, params: dict = None, code: HTTPStatus = HTTPStatus.OK):
+        response = BaseRequest().get(f"{self.path}/{pet_id}", params=params, code=code)
 
         assert_that(f'"id":{pet_id}', is_in(response.text))
 
