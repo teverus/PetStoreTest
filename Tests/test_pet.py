@@ -28,11 +28,11 @@ def pet(api):
     api.pet_id.delete(new_pet.pet_id)
 
 
-def test_add_a_new_pet(api, pet):
+def test_post_pet(api, pet):
     api.pet.post(pet)
 
 
-def test_get_pet_by_id(api, pet):
+def test_get_pet_petId(api, pet):
     api.pet.post(pet)
     api.pet_id.get(pet.pet_id)
 
@@ -46,5 +46,5 @@ def test_get_pet_by_id(api, pet):
         ("", HTTPStatus.METHOD_NOT_ALLOWED),
     ],
 )
-def test_delete_invalid(api, invalid_id, status_code):
+def test_delete_pet_petID_negative(api, invalid_id, status_code):
     api.pet_id.delete(invalid_id, code=status_code)
