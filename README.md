@@ -2,6 +2,7 @@
 
 * [Quick start](#quick-start)
 * [Run the tests and get an HTML report](#run-the-tests-and-get-an-html-report)
+* [Run the tests in GitHub Actions](#run-the-tests-in-github-actions)
 * [Run the tests in GitLab CI/CD](#run-the-tests-in-gitlab-cicd)
 * [Run the tests in a Docker container](#run-the-tests-in-a-docker-container)
 
@@ -26,6 +27,9 @@ To run the tests and get an HTML report, navigate to the root of the repository 
 pytest & report.html
 ```
 `report.html` is a self-contained HTML file that can be easily shared.
+
+## Run the tests in GitHub Actions
+The repository already features a YML file for GitHub Actions. The tests will be run on push and pull_requests. The result can be seen in `Actions` tab in GitHub. 
 
 ## Run the tests in GitLab CI/CD
 The repository already features a `.gitlab-ci.yml`. You can change it to your liking. 

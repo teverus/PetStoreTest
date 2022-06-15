@@ -1,53 +1,73 @@
 import json
 from http import HTTPStatus
+from json import JSONDecodeError
 
-from hamcrest import assert_that, is_in, equal_to
+from hamcrest import assert_that, equal_to
+from pydantic import BaseModel
+from requests import JSONDecodeError as requests_error
 
-from Code.base_endpoint import BaseEndpoint
 from Code.base_request import BaseRequest
-from Code.helpers import get_pet_json
+from Code.constants import METHOD_NOT_ALLOWED_ERROR, NotFoundError, DeleteSuccess
+from Code.pet_object import Pet
 
 
-class PetEndpoint(BaseEndpoint):
+class PetEndpoint:
     def __init__(self, path):
-        super(PetEndpoint, self).__init__(path)
+        self.path = path
 
-    def post(self, data: dict):
-        json_data = get_pet_json(data)
+    def post(self, data: BaseModel):
+        json_data = json.loads(data.json())
 
         response = BaseRequest().post(self.path, json_data)
-        response_json = json.loads(response.text)
+        response_json = response.json()
+        expected_json = {k: v for k, v in json.loads(data.json()).items() if v}
 
-        for key, value in json_data.items():
-            assert_that(response_json[key], equal_to(value))
+        assert_that(response_json, equal_to(expected_json))
 
 
-class PetFindByStatus(BaseEndpoint):
+class PetFindByStatus:
     def __init__(self, path):
-        super(PetFindByStatus, self).__init__(path)
+        self.path = path
 
 
-class PetFindByTags(BaseEndpoint):
+class PetFindByTags:
     def __init__(self, path):
-        super(PetFindByTags, self).__init__(path)
+        self.path = path
 
 
-class PetId(BaseEndpoint):
+class PetPetId:
     def __init__(self, path):
-        super(PetId, self).__init__(path)
+        self.path = path
 
-    def get(self, pet_id: int, code: HTTPStatus = HTTPStatus.OK):
-        response = BaseRequest().get(f"{self.path}/{pet_id}", code=code)
+    def get(self, pet: Pet, params: dict = None, code: HTTPStatus = HTTPStatus.OK):
+        response = BaseRequest().get(f"{self.path}/{pet.id}", params=params, code=code)
+        response_json = response.json()
+        expected_json = {k: v for k, v in json.loads(pet.json()).items() if v}
 
-        assert_that(f'"id":{pet_id}', is_in(response.text))
+        assert_that(response_json, equal_to(expected_json))
 
-    def delete(self, pet_id: int, code: HTTPStatus = HTTPStatus.OK):
-        response = BaseRequest().delete(f"{self.path}/{pet_id}", code=code)
+    def delete(self, pet: Pet, code: HTTPStatus = HTTPStatus.OK):
+        response = BaseRequest().delete(f"{self.path}/{pet.id}", code=code)
+        try:
+            response_json = response.json()
+        except (requests_error, JSONDecodeError):
+            response_json = None
 
         if code == HTTPStatus.OK:
-            assert_that(f'"message":"{pet_id}"', is_in(response.text))
+            success = DeleteSuccess()
+            success.message %= pet.id
+            assert_that(success.dict(), equal_to(response_json))
+        elif code == HTTPStatus.NOT_FOUND:
+            if response.text:
+                error = NotFoundError()
+                error.message %= pet.id
+                assert_that(error.dict(), equal_to(response_json))
+        elif code == HTTPStatus.METHOD_NOT_ALLOWED:
+            assert_that(response.text, equal_to(METHOD_NOT_ALLOWED_ERROR))
+        else:
+            raise Exception(f"\n[ERROR] Unexpected status code! {response.status_code}")
 
 
-class PetIdUploadImage(BaseEndpoint):
+class PetIdUploadImage:
     def __init__(self, path):
-        super(PetIdUploadImage, self).__init__(path)
+        self.path = path

@@ -1,40 +1,36 @@
 from http import HTTPStatus
+from random import randrange, choice
 
 import pytest
+from faker.providers.person.en import Provider as Fake
 
-from Code.helpers import get_random_int, get_random_string, get_random_pet_status
-from Code.pet_object import Pet
+from Code.constants import InvalidPet
+from Code.pet_object import Pet, Category, PetStatus
 
 
 @pytest.fixture(scope="module")
 def pet(api):
     """A fixture that creates a pet for tests and deletes it afterwards"""
-    random_id = get_random_int(5)
-    random_name = get_random_string()
-    random_category_id = get_random_int(5)
-    random_category = get_random_string()
-    random_status = get_random_pet_status()
 
     new_pet = Pet(
-        pet_id=random_id,
-        pet_name=random_name,
-        category_id=random_category_id,
-        category_name=random_category,
-        status=random_status,
+        name=choice(Fake.first_names),
+        id=randrange(100),
+        category=Category(id=randrange(100), name=choice(Fake.last_names)),
+        status=choice(list(PetStatus)),
     )
 
     yield new_pet
 
-    api.pet_id.delete(new_pet.pet_id)
+    api.pet_id.delete(new_pet)
 
 
-def test_add_a_new_pet(api, pet):
+def test_post_pet(api, pet):
     api.pet.post(pet)
 
 
-def test_get_pet_by_id(api, pet):
+def test_get_pet_petId(api, pet):
     api.pet.post(pet)
-    api.pet_id.get(pet.pet_id)
+    api.pet_id.get(pet)
 
 
 @pytest.mark.parametrize(
@@ -46,5 +42,5 @@ def test_get_pet_by_id(api, pet):
         ("", HTTPStatus.METHOD_NOT_ALLOWED),
     ],
 )
-def test_delete_invalid(api, invalid_id, status_code):
-    api.pet_id.delete(invalid_id, code=status_code)
+def test_delete_pet_petID_negative(api, invalid_id, status_code):
+    api.pet_id.delete(InvalidPet(invalid_id), code=status_code)
